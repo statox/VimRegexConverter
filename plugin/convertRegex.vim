@@ -17,21 +17,19 @@ function! ConvertRegex(toMode, regex)
             let charsRemoveEscape=['(', ')', '|', '=', '<', '>', '+']
             let charsAddEscape=['{']
         elseif a:toMode == "V"
-            " TODO: handle '.' in addEscape
             let charsRemoveEscape=['\.']
-            let charsAddEscape=['$', '*']
+            let charsAddEscape=['$', '*', '.']
         elseif a:toMode == "M"
             let charsRemoveEscape=['\.']
             let charsAddEscape=['*']
         endif
     elseif fromMode == '\M'
         if a:toMode == "v"
-            " TODO: handle '.' in addEscape
-            let charsRemoveEscape=['*', '(', ')', '|']
-            let charsAddEscape=['{']
+            let charsRemoveEscape=['(', ')', '|', '\.']
+            let charsAddEscape=['{', '.']
         elseif a:toMode == "V"
-            let charsRemoveEscape=[]
-            let charsAddEscape=[]
+            let charsRemoveEscape=['\.']
+            let charsAddEscape=['$', '.']
         elseif a:toMode == "m"
             let charsRemoveEscape=[]
             let charsAddEscape=[]
