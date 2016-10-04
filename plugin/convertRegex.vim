@@ -66,12 +66,10 @@ function! ConvertRegex(toMode, regex)
 endfunction
 
 function! RemoveEscaping(char, regex)
-    "echo('\\'.a:char . " => " . a:char)
     return substitute(a:regex, '\\'.a:char, a:char, "g")
 endfunction
 
 function! AddEscaping(char, regex)
-    "echo(a:char . " => " . '\\'.a:char)
     if a:char == "$"
         return substitute(a:regex, '\$', '\\$', "g")
     else
