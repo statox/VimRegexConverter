@@ -72,6 +72,8 @@ endfunction
 function! AddEscaping(char, regex)
     if a:char == "$"
         return substitute(a:regex, '\$', '\\$', "g")
+    elseif a:char == "."
+        return substitute(a:regex, '\.', '\\.', "g")
     else
         return substitute(a:regex, a:char, '\\'.a:char, "g")
     endif
