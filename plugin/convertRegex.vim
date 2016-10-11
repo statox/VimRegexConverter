@@ -66,8 +66,8 @@ function! ConvertRegex(toMode, regex)
         return
     endif
 
-    " Apply the convertion
-    let res= <sid>ApplyConvertion(a:regex, charsRemoveEscape, charsAddEscape, inverseDotEscaping)
+    " Apply the conversion
+    let res= <sid>ApplyConversion(a:regex, charsRemoveEscape, charsAddEscape, inverseDotEscaping)
     " Change the mode of the regex (first two characters)
     let res= substitute(res, '..', '\\'.a:toMode, '')
 
@@ -78,34 +78,24 @@ function! ConvertRegex(toMode, regex)
     return res
 endfunction
 
-function! s:RemoveEscaping(char, regex)
-    return substitute(a:regex, '\V\\'.a:char, a:char, "g")
-endfunction
-
-function! s:AddEscaping(char, regex)
-    return substitute(a:regex, '\V'.a:char, '\\'.a:char, "g")
-endfunction
-
-function! s:InverseDotEscaping(regex)
-    let res = substitute(a:regex , '\V\\.', 'UNESCAPEME', 'g')
-    let res = substitute(res, '\V.', '\\.', 'g')
-    return substitute(res, 'UNESCAPEME', '.', 'g')
-endfunction
-
-function! s:ApplyConvertion(regex, charsRemoveEscape, charsAddEscape, inverseDotEscaping)
+function! s:ApplyConversion(regex, charsRemoveEscape, charsAddEscape, inverseDotEscaping)
     let res = a:regex
 
+    " Remove '\'
     for char in a:charsRemoveEscape
-        let res = <sid>RemoveEscaping(char, res)
+        let res = substitute(res, '\V\\'.char, char, "g")
     endfor
 
+    " Add '\'
     for char in a:charsAddEscape
-        let res = <sid>AddEscaping(char, res)
+        let res = substitute(res, '\V'.char, '\\'.char, "g")
     endfor
 
-    " Handle the dot convertion
+    " Handle the dot conversion
     if a:inverseDotEscaping == 1
-        let res = <sid>InverseDotEscaping(res)
+        let res = substitute(res, '\V\\.', 'UNESCAPEME', 'g')
+        let res = substitute(res, '\V.', '\\.', 'g')
+        let res = substitute(res, 'UNESCAPEME', '.', 'g')
     endif
 
     return res
