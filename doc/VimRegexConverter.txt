@@ -1,0 +1,108 @@
+*VimRegexConverter.txt* Convert Vim regex from a magic mode to another
+______                     _____                           _            
+I ___ \                   /  __ \                         I I           
+I I_/ /___  __ _  _____  _I /  \/ ___  _ ____   _____ _ __I I_ ___ _ __ 
+I    // _ \/ _` I/ _ \ \/ / I    / _ \I '_ \ \ / / _ \ '__I __/ _ \ '__I
+I I\ \  __/ (_I I  __/>  <I \__/\ (_) I I I \ V /  __/ I  I II  __/ I   
+\_I \_\___I\__, I\___/_/\_\\____/\___/I_I I_I\_/ \___I_I   \__\___I_I   
+            __/ I                                                       
+           I___/                                                        
+  
+A regex converter which transforms your magic mode regex to verymagic or any
+other Vim regex mode
+
+(This help file is a work in progress it might need some improvements and
+contain some unwanted typos/grammar mistakes/satan invocations)
+===============================================================================
+CONTENTS                                                     *RegexConverter*
+
+    1. Usage ................ |RegexConverterUsage|
+    2. License .............. |RegexConverterLicense|
+    3. Bugs ................. |RegexConverterBugs|
+    4. Contributing ......... |RegexConverterContributing|
+    5. Changelog ............ |RegexConverterChangelog|
+
+===============================================================================
+1. Usage                                                 *RegexConverterUsage*
+
+RegexConverter allows to modify a regex written for a specific regex mode to
+any other regex mode.
+
+For more information about the available regex mode in Vim see |/magic|
+                                                              
+This plugin exposes one function `convertRegex()` which expects two parameters.
+
+ConvertRegex({mode}, {expr})                                  *ConvertRegex()*
+
+The {mode} parameter is a single character describing the mode you want to
+convert the regex to.
+Accepted values are : `'m'`, `'M'`, `'v'`, `'V'`.
+
+The {expr} parameter is a single quoted string containing the regex you want
+to convert.
+The string MUST begin with the mode describing the regex i.e. `'\m'`, `'\M'`,
+`'\v'`or `'\V'`.
+
+An example to call the function is:
+>
+    call ConvertRegex('v', '\m-\=\<\d\+L\=\>\|0[xX][0-9a-fA-F]\+\>')
+<
+which will return `\v-=<\d+L=>|0[xX][0-9a-fA-F]+>`.
+
+To do the reverse operation the call is:
+>
+    call ConvertRegex('m', '\v-=<\d+L=>|0[xX][0-9a-fA-F]+>')
+<
+which will return `\m-\=\<\d\+L\=\>\|0[xX][0-9a-fA-F]\+\>`
+
+===============================================================================
+2. License                                             *RegexConverterLicense*
+
+VimRegexConverter is distributed with the following license:
+
+The MIT License (MIT)
+
+Copyright (c) 2015 Adrien Fabre
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+===============================================================================
+3. Bugs                                                   *RegexConverterBugs*
+
+To report a bug please feel free to leave an issue on:
+
+https://github.com/statox/VimRegexConverter/issues
+
+===============================================================================
+4. Contributing                                   *RegexConverterContributing*
+
+If you want to help contributing to this plugin feel free to fork the github
+repo https://github.com/statox/VimRegexConverter and to send pull request the
+author will gladly look at them and merge them in the project.
+
+===============================================================================
+5. Changelog                                         *RegexConverterChangelog*
+
+VimRegexConverter isn't yet in a stable version. When I'll have finished the
+development you'll hopefully find here the changelog of the different stable
+version and maybe some prevision for future features. Well... Maybe.
+
+
+vim:tw=78:sw=4:ts=8:ft=help:norl:
