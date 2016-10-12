@@ -6,6 +6,8 @@ Easily convert a magic regex to a verymagic one
 RegexConverter allows to modify a regex written for a specific regex mode to
 any other regex mode.
 
+It was inspired be the following question on vi.se: [Is there a way to convert a Vim regex literal to different magic modes?](http://vi.stackexchange.com/q/9786/1841)
+
 For more information about the available regex mode in Vim see [`:h /magic`](http://vimdoc.sourceforge.net/htmldoc/pattern.html#/magic)
                                                               
 This plugin exposes one function `convertRegex()` which expects two parameters.
@@ -38,4 +40,4 @@ which will return `\m-\=\<\d\+L\=\>\|0[xX][0-9a-fA-F]\+\>`
 **This is a work in progress**
 
 The plugin still need some work to handle all of the characters needed in each mode.
-
+Feel free to make a pull request or to contact me if you want to give some help.
