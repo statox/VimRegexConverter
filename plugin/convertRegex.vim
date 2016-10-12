@@ -32,62 +32,62 @@ function! ConvertRegex(toMode, regex)
             \'mv' : {
                 \'remove' :['(', ')', '|', '=', '<', '>', '+'],
                 \'add' :['{'],
-                \'inverseDotEscaping' : '0'
+                \'inverse' : []
             \},
             \'mV' : {
                 \'remove' :[],
                 \'add' :['$', '*', '~'],
-                \'inverseDotEscaping' : '1'
+                \'inverse' : ['.']
             \},
             \'mM' : {
                 \'remove' :[],
                 \'add' :['*', '~'],
-                \'inverseDotEscaping' : '1'
+                \'inverse' : ['.']
             \},
             \'Mv' : {
                 \'remove' :['*', '~', '(', ')', '|'],
                 \'add' :['{'],
-                \'inverseDotEscaping' : '1'
+                \'inverse' : ['.']
             \},
             \'MV' : {
                 \'remove' :[],
                 \'add' :['$'],
-                \'inverseDotEscaping' : '0'
+                \'inverse' : []
             \},
             \'Mm' : {
                 \'remove' :['*', '~'],
                 \'add' :[],
-                \'inverseDotEscaping' : '1'
+                \'inverse' : ['.']
             \},
             \'vm' : {
                 \'remove' :['{'],
                 \'add' :['(', ')', '|', '=', '<', '>', '+'],
-                \'inverseDotEscaping' : '0'
+                \'inverse' : []
             \},
             \'vV' : {
                 \'remove' :['{'],
                 \'add' :['$', '*', '~', '(', ')', '|'],
-                \'inverseDotEscaping' : '1'
+                \'inverse' : ['.']
             \},
             \'vM' : {
                 \'remove' :['{'],
                 \'add' :['*', '~', '(', ')', '|'],
-                \'inverseDotEscaping' : '1'
+                \'inverse' : ['.']
             \},
             \'Vv' : {
                 \'remove' :['$', '*', '~', '(', ')', '|'],
                 \'add' :['{'],
-                \'inverseDotEscaping' : '1'
+                \'inverse' : ['.']
             \},
             \'Vm' : {
                 \'remove' :['$', '*', '~'],
                 \'add' :['{', '}'],
-                \'inverseDotEscaping' : '1'
+                \'inverse' : ['.']
             \},
             \'VM' : {
                 \'remove' :['$'],
                 \'add' :[],
-                \'inverseDotEscaping' : '0'
+                \'inverse' : []
             \}
         \}
 
@@ -115,12 +115,12 @@ function! s:ApplyConversion(regex, charsToEscape, toMode)
         let res = substitute(res, '\V'.char, '\\'.char, "g")
     endfor
 
-    " Handle the dot conversion
-    if a:charsToEscape['inverseDotEscaping'] == 1
-        let res = substitute(res, '\V\\.', 'UNESCAPEME', 'g')
-        let res = substitute(res, '\V.', '\\.', 'g')
-        let res = substitute(res, 'UNESCAPEME', '.', 'g')
-    endif
+    " Handle the chars where escaping needs to be inversed
+    for char in a:charsToEscape['inverse']
+        let res = substitute(res, '\V\\'.char, 'UNESCAPEME', 'g')
+        let res = substitute(res, '\V'.char, '\\'.char, 'g')
+        let res = substitute(res, 'UNESCAPEME', char, 'g')
+    endfor
 
     " Change the mode of the regex (first two characters)
     let res= substitute(res, '..', '\\'.a:toMode, '')
