@@ -3,15 +3,24 @@ function! ConvertRegex(toMode, regex)
     let fromMode = matchstr(a:regex, '..')
     let inverseDotEscaping = 0
 
+    let s:saveIgnoreCase=&ignorecase
     set noignorecase
+
+    if a:toMode != 'm' && a:toMode != 'M' && a:toMode != 'v' && a:toMode != 'V'
+        echoerr "Can't get the mode you want to convert the regex to"
+        echoerr "Please make your first argument be 'm', 'M', 'v' or 'V'"
+        return 0
+    endif
+    
     if fromMode[1] == a:toMode
         echo "The specified mode is the one already used in the regex"
         return
     endif
+
     if fromMode == '\m'
         if a:toMode == "v"
-            let charsRemoveEscape = ['(', ')', '|']
-            let charsAddEscape = ['{', '}']
+            let charsRemoveEscape = ['(', ')', '|', '=', '<', '>', '+']
+            let charsAddEscape = ['{']
         elseif a:toMode == "V"
             let charsRemoveEscape = []
             let charsAddEscape = ['$', '*', '~']
@@ -24,7 +33,7 @@ function! ConvertRegex(toMode, regex)
     elseif fromMode == '\M'
         if a:toMode == "v"
             let charsRemoveEscape = ['*', '~', '(', ')', '|']
-            let charsAddEscape = ['{', '}']
+            let charsAddEscape = ['{']
             let inverseDotEscaping = 1
         elseif a:toMode == "V"
             let charsRemoveEscape = []
@@ -36,21 +45,21 @@ function! ConvertRegex(toMode, regex)
         endif
     elseif fromMode == '\v'
         if a:toMode == "m"
-            let charsRemoveEscape = ['{', '}']
-            let charsAddEscape = ['(', ')', '|']
+            let charsRemoveEscape = ['{']
+            let charsAddEscape = ['(', ')', '|', '=', '<', '>', '+']
         elseif a:toMode == "V"
-            let charsRemoveEscape = ['{', '}']
+            let charsRemoveEscape = ['{']
             let charsAddEscape = ['$', '*', '~', '(', ')', '|']
             let inverseDotEscaping = 1
         elseif a:toMode == "M"
-            let charsRemoveEscape = ['{', '}']
+            let charsRemoveEscape = ['{']
             let charsAddEscape = ['*', '~', '(', ')', '|']
             let inverseDotEscaping = 1
         endif
     elseif fromMode == '\V'
         if a:toMode == "v"
             let charsRemoveEscape = ['$', '*', '~', '(', ')', '|']
-            let charsAddEscape = ['{', '}']
+            let charsAddEscape = ['{']
             let inverseDotEscaping = 1
         elseif a:toMode == "m"
             let charsRemoveEscape = ['$', '*', '~']
@@ -61,9 +70,9 @@ function! ConvertRegex(toMode, regex)
             let charsAddEscape = []
         endif
     else
-        echo "Can't get the mode of the regex to convert"
-        echo "Please make your regex begin with '\\v', '\\m', '\\V' or '\\M'"
-        return
+        echoerr "Can't get the original mode of the regex to convert"
+        echoerr "Please make your regex begin with '\\v', '\\m', '\\V' or '\\M'"
+        return 0
     endif
 
     " Apply the conversion
@@ -71,9 +80,8 @@ function! ConvertRegex(toMode, regex)
     " Change the mode of the regex (first two characters)
     let res= substitute(res, '..', '\\'.a:toMode, '')
 
-    echo a:regex
-    echo res
-    echo " "
+    let &ignorecase=s:saveIgnoreCase
+    unlet s:saveIgnoreCase
 
     return res
 endfunction
